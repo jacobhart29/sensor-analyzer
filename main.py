@@ -6,6 +6,19 @@ last_reading = None
 min_reading = None
 max_reading = None
 unusual_count = 0
+unusual_percentage = 0
+
+def summarize_sensor_data(readings):
+    if len(readings) == 0:
+        return { min_reading: None, max_reading: None, average_reading: None, unusual_count: 0, unusual_percentage: 0 }
+    else:
+        min_reading = min(readings)
+        max_reading = max(readings)
+        average_reading = sum(readings) / len(readings)
+        unusual_count = sum(1 for reading in readings if reading < 20 or reading > 60)
+        unusual_percentage = (unusual_count / len(readings)) * 100
+        return { 'min_reading': min_reading, 'max_reading': max_reading, 'average_reading': average_reading, 'unusual_count': unusual_count, 'unusual_percentage': unusual_percentage }
+
 
 def calculate_average(readings):
     if len(readings) == 0:
@@ -36,17 +49,17 @@ for start in range(0, len(readings), 100):
     print("Group:", start + 1, "to", start + len(group), "Average:", calculate_average(group))
 
 print("Unusual readings:", unusual_count)
-percentage = (unusual_count / len(readings)) * 100
-print("Unusual percentage:", str(percentage) + "%")
+unusual_percentage = (unusual_count / len(readings)) * 100
+print("Unusual percentage:", str(unusual_percentage) + "%")
 
 first_reading = readings[0]
 last_reading = readings[-1]
 min_reading = min(readings)
 max_reading = max(readings)
+average_reading = calculate_average(readings)
 print("Number of readings:", len(readings))
 print("First reading:", first_reading)
 print("Last reading:", last_reading)
 print("Minimum reading:", min_reading)
 print("Maximum reading:", max_reading)
-
-print("Average reading:", calculate_average(readings))
+print("Average reading:", average_reading)
